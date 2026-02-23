@@ -5,7 +5,7 @@
 {% block body %}
     <h1 class="mb-4">📰 Taches (depuis la BDD)</h1>
 
-    {% if articles is empty %}
+    {% if taches is empty %}
         <div class="alert alert-info">
             Aucune tache en base de données. 
             <a href="{{ path('app_tache_nouvelle') }}" class="alert-link">Créer une tache</a>
@@ -26,8 +26,8 @@
                         <tr>
                             <td class="text-center">{{ tache.titre }}</td>
                             <td>{{ tache.description }}</td>
-                            <td>{{ tache.terminee }}</td>
                             <td>{{ tache.dateCreation|date('d/m/Y') }}</td>
+                            <td>{{ tache.terminee ? 'Terminée' : 'En cours' }}</td>
                             
                         </tr>
                     {% endfor %}
@@ -38,11 +38,12 @@
             {{ taches|length }} tache(s) en base de données
         </p>
     {% endif %}
-    {% for tache in taches}
+    {% for tache in taches %}
 
-    {% if !tache.terminee}
-    <p style="text-decoration: line-through">tache<\p> 
-    {%endif}
-    {%endfor}
+        {% if not tache.terminee %}
+            <p style="text-decoration: line-through">{{ tache.titre }}</p>
+        {% endif %}
+
+    {% endfor %}
 
 {% endblock %}

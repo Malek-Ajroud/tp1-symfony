@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\TacheRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'tache')]
+
 #[ORM\Entity(repositoryClass: TacheRepository::class)]
 class Tache
 {
