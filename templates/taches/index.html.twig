@@ -38,4 +38,11 @@
             {{ taches|length }} tache(s) en base de données
         </p>
     {% endif %}
+    {% for tache in taches}
+
+    {% if !tache.terminee}
+    <p style="text-decoration: line-through">tache<\p> 
+    {%endif}
+    {%endfor}
+
 {% endblock %}
