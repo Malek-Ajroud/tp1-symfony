@@ -6,6 +6,9 @@ use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Categorie; 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -58,6 +61,34 @@ class Article
 
     #[ORM\Column]
     private ?bool $publie = null;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Categorie $categorie = null;
+        #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Article::class)]
+    private Collection $articles;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+    }
+
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): self
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
     
 
     public function getTitre(): ?string
@@ -119,4 +150,6 @@ class Article
 
         return $this;
     }
+
+    
 }
