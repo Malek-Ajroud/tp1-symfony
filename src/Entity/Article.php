@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -17,21 +20,45 @@ class Article
     {
         return $this->id;
     }
-
+    
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le titre ne peut pas être vide.')]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: 'Le titre doit contenir au moins {{ limit }} caractères.',
+        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères.'
+    )]
     private ?string $titre = null;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: 'Le contenu ne peut pas être vide.')]
+    #[Assert\Length(
+        min: 20,
+        minMessage: 'Le contenu doit contenir au moins {{ limit }} caractères.'
+    )]
     private ?string $contenu = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-ZÀ-ÿ\s\-]+$/',
+        message: 'Le nom de l\'auteur ne peut contenir que des lettres, espaces et tirets.'
+    )]
+    #[Assert\NotBlank(message: 'L\'auteur est obligatoire.')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'Le nom de l\'auteur doit contenir au moins {{ limit }} caractères.'
+    )]
     private ?string $auteur = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: 'La date de création est obligatoire.')]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column]
     private ?bool $publie = null;
+    
 
     public function getTitre(): ?string
     {
