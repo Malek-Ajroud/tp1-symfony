@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmer la suppression{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">🗑️ Supprimer la catégorie</h1>
+
+            <div class="alert alert-warning">
+                Vous êtes sur le point de supprimer la catégorie <strong>{{ categorie.nom }}</strong>.
+                Cette action est irréversible et supprimera les relations avec les articles.
+            </div>
+
+            <div class="mb-4">
+                <a href="{{ path('app_categorie_detail', {id: categorie.id}) }}" class="btn btn-link">← Annuler</a>
+
+                <form method="post" action="{{ path('app_categorie_supprimer', {id: categorie.id}) }}" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('supprimer_' ~ categorie.id) }}">
+                    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
