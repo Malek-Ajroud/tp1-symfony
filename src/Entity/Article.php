@@ -6,7 +6,8 @@ use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\Categorie; 
+use App\Entity\Categorie;
+use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -65,7 +66,11 @@ class Article
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Categorie $categorie = null;
-        #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Article::class)]
+    
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $auteur_user = null;
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Article::class)]
     private Collection $articles;
 
     public function __construct()
@@ -86,6 +91,18 @@ class Article
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+    
+    public function getAuteurUser(): ?User
+    {
+        return $this->auteur_user;
+    }
+
+    public function setAuteurUser(?User $auteur_user): self
+    {
+        $this->auteur_user = $auteur_user;
 
         return $this;
     }

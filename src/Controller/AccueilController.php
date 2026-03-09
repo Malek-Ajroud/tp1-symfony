@@ -33,6 +33,11 @@ final class AccueilController extends AbstractController
     #[Route('/articles/{id}/modifier', name: 'app_article_modifier', requirements: ['id' => '\d+'])]
     public function modifier(Article $article, Request $request, EntityManagerInterface $em): Response
     {
+        $currentUser = $this->getUser();
+        if ($article->getAuteurUser() !== null && $currentUser !== $article->getAuteurUser() && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier cet article.');
+        }
+
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
