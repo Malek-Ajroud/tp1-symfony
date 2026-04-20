@@ -3,7 +3,28 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <h1>👋 Bienvenue sur notre application Symfony !</h1>
-    <p>Ceci est votre première application construite avec le framework <strong>Symfony 7.4</strong>.</p>
+    <div class="mb-4 p-3 bg-info text-white rounded">
+        👋 Bienvenue sur notre application Symfony ! <br>
+        Vous avez visité cette page <strong>{{ nbVisites }}</strong> fois.
+    </div>
+
+    <h1>📰 Derniers articles publiés</h1>
+    <div class="row">
+        {% for article in derniersArticles %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.titre }}</h5>
+                        <p class="card-text text-muted">{{ article.contenu|slice(0, 100) }}...</p>
+                        <a href="{{ path('app_article_detail', {id: article.id}) }}" class="btn btn-primary btn-sm">Lire la suite</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucun article publié pour le moment.</p>
+        {% endfor %}
+    </div>
+
+    <hr>
     <p>Date actuelle : {{ "now"|date("d/m/Y H:i") }}</p>
 {% endblock %}

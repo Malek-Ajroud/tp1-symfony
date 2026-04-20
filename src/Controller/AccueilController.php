@@ -9,14 +9,24 @@ use App\Entity\Article;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\ArticleType;
+use Symfony\Component\HttpFoundation\RequestStack;
+use App\Repository\ArticleRepository;
 
 final class AccueilController extends AbstractController
 {
     #[Route('/accueil', name: 'app_accueil')]
-    public function index(): Response
+    public function index(RequestStack $requestStack, ArticleRepository $articleRepository): Response
     {
+        $session = $requestStack->getSession();
+        
+        $nbVisites = $session->get('nb_visites', 0);
+        $session->set('nb_visites', $nbVisites + 1);
+
+        $derniersArticles = $articleRepository->findLastPublished(3);
+    
         return $this->render('accueil/index.html.twig', [
-            'controller_name' => 'AccueilController',
+            'derniersArticles' => $derniersArticles,
+            'nbVisites' => $nbVisites,
         ]);
     }
     
@@ -67,4 +77,5 @@ final class AccueilController extends AbstractController
 
         return $this->redirectToRoute('app_articles');
     }
+    
 }

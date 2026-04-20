@@ -40,4 +40,14 @@ class ArticleRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function findLastPublished(int $limit): array
+{
+    return $this->createQueryBuilder('a')
+        ->andWhere('a.publie = :val')
+        ->setParameter('val', true)
+        ->orderBy('a.id', 'DESC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+}
 }
